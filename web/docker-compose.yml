@@ -1,0 +1,35 @@
+# Entorno completo: Postgres + app Next.js.
+#   Solo base de datos (desarrollo con `pnpm dev`):  docker compose up -d db
+#   Todo en contenedores:                             docker compose up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nexorh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/db-init.sql:/docker-entrypoint-initdb.d/01-app-role.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nexorh"]
+      interval: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # La app usa un rol sin privilegios para que RLS aplique; las migraciones usan el dueño.
+      DATABASE_URL: postgres://app_user:app_user@db:5432/nexorh
+      MIGRATION_DATABASE_URL: postgres://postgres:postgres@db:5432/nexorh
+      SEED_DEMO: "true"
+    ports:
+      - "3100:3000"
+
+volumes:
+  pgdata:
