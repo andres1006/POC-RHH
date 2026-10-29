@@ -6,6 +6,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      { source: "/andina", destination: "/t/andina", permanent: false },
+      { source: "/andina/:path*", destination: "/t/andina/:path*", permanent: false },
+      { source: "/eficacia", destination: "/t/andina", permanent: false },
+      { source: "/eficacia/:path*", destination: "/t/andina/:path*", permanent: false },
+    ]
+  },
   async headers() {
     return [
       {

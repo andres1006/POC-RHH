@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env"
 
 const RESERVED_SUBDOMAINS = new Set(["www", "app"])
 
@@ -18,6 +19,12 @@ function tenantFromHost(host: string | null): string | null {
 export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  if (pathname === "/andina" || pathname.startsWith("/andina/") || pathname === "/eficacia" || pathname.startsWith("/eficacia/")) {
+    const url = request.nextUrl.clone()
+    url.pathname = pathname.replace(/^\/(andina|eficacia)/, "/t/andina")
+    return NextResponse.redirect(url)
+  }
+
   // Subdomain tenancy (acme.app.com) rewrites to the /t/[tenant] fallback route.
   const subdomainTenant = tenantFromHost(request.headers.get("host"))
   if (subdomainTenant && !pathname.startsWith("/t/") && !pathname.startsWith("/auth") && !pathname.startsWith("/api")) {
@@ -29,8 +36,8 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    getSupabaseUrl(),
+    getSupabaseAnonKey(),
     {
       cookieOptions: { secure: process.env.NODE_ENV === "production" },
       cookies: {
@@ -46,9 +53,13 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user: { id: string } | null = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    return supabaseResponse
+  }
 
   if (pathname.startsWith("/t/") && !user) {
     const url = request.nextUrl.clone()
