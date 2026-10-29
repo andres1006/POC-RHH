@@ -4,7 +4,7 @@ export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== "false"
 export const DEMO_SIGN_CODE = "123456"
 
 export const DEMO_TENANTS = [
-  { slug: "andina", name: "Andina Logística", color: "#2563EB" },
+  { slug: "andina", name: "Eficacia", color: "#1E5DA1" },
   { slug: "cafe", name: "Café Montaña", color: "#16A34A" },
 ] as const
 

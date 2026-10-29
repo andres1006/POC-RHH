@@ -24,7 +24,7 @@ export default async function HomePage() {
           Prototipo navegable · Next.js + Supabase
         </span>
         <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">
-          Nexo RH: la gestión humana de tu empresa en un solo lugar
+          Eficacia RH: la gestión humana de tu empresa en un solo lugar
         </h1>
         <p className="max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
           Autoservicio del colaborador, aprobaciones, documentos con firma, onboarding, asistencia, desempeño e indicadores. Multiempresa, en

@@ -8,7 +8,7 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
 
 export const metadata: Metadata = {
-  title: { default: "Nexo RH", template: "%s · Nexo RH" },
+  title: { default: "Eficacia RH", template: "%s · Eficacia RH" },
   description: "Plataforma de gestión humana multiempresa para Colombia y LatAm: autoservicio, vacaciones, documentos, onboarding e indicadores.",
   generator: "v0.app",
 }

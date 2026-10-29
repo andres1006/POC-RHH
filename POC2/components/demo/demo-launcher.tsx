@@ -30,11 +30,11 @@ export function DemoLauncher() {
           <Card key={t.slug} className="overflow-hidden">
             <CardHeader className="flex flex-row items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-lg border bg-background">
-                <Image src={`/logos/${t.slug}.png`} alt="" width={28} height={28} />
+                <Image src={t.slug === "andina" ? "/logos/eficacia.png" : `/logos/${t.slug}.png`} alt="" width={28} height={28} className="object-contain" />
               </span>
               <div>
                 <CardTitle className="text-base">{t.name}</CardTitle>
-                <p className="text-xs text-muted-foreground">{t.slug === "andina" ? "48 personas · Logística" : "25 personas · Agroindustria"}</p>
+                <p className="text-xs text-muted-foreground">{t.slug === "andina" ? "Eficacia RH · fuerza de ventas" : "25 personas · Agroindustria"}</p>
               </div>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-2">

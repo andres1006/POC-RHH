@@ -31,3 +31,7 @@ yarn-error.log*
 .vercel
 .claude
 .cursor
+
+# Este repo publica solo POC2 (el prototipo desplegable).
+/web
+/docs

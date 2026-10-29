@@ -5,6 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import type { Role, Tenant } from "@/lib/types"
+import { PRODUCT_NAME } from "@/lib/brand"
 import { visibleGroups } from "./nav"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
@@ -28,12 +29,12 @@ export function Sidebar({ tenant, role, base, collapsed, onToggle, onNavigate }:
     <div className="flex h-full flex-col">
       <div className={cn("flex h-16 items-center gap-3 border-b px-4", collapsed && "justify-center px-0")}>
         <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-background">
-          {tenant.logo_url ? <Image src={tenant.logo_url} alt="" width={28} height={28} /> : <span className="font-semibold text-primary">{tenant.name[0]}</span>}
+          {tenant.logo_url ? <Image src={tenant.logo_url} alt="" width={36} height={36} className="size-9 object-contain p-0.5" /> : <span className="font-semibold text-primary">{tenant.name[0]}</span>}
         </span>
         {!collapsed && (
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold">{tenant.name}</p>
-            <p className="truncate text-xs text-muted-foreground">Nexo RH</p>
+            <p className="truncate text-xs text-muted-foreground">{PRODUCT_NAME}</p>
           </div>
         )}
       </div>

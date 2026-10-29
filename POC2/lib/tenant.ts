@@ -2,6 +2,7 @@ import { cache } from "react"
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import type { Employee, Role, Tenant, TenantContext } from "@/lib/types"
+import { brandedTenant } from "@/lib/brand"
 
 export const getTenantContext = cache(async (slug: string): Promise<TenantContext> => {
   const supabase = await createClient()
@@ -28,7 +29,7 @@ export const getTenantContext = cache(async (slug: string): Promise<TenantContex
     .single()
 
   return {
-    tenant: tenant as Tenant,
+    tenant: brandedTenant(tenant as Tenant),
     role: membership.role as Role,
     employee: employee as Employee,
     userId: user.id,
@@ -42,7 +43,10 @@ export const getUserTenants = cache(async () => {
   } = await supabase.auth.getUser()
   if (!user) return []
   const { data } = await supabase.from("memberships").select("role, tenant:tenants(id, slug, name, logo_url, primary_color)").eq("user_id", user.id)
-  return (data ?? []) as unknown as { role: Role; tenant: Tenant }[]
+  return ((data ?? []) as unknown as { role: Role; tenant: Tenant }[]).map((row) => ({
+    ...row,
+    tenant: brandedTenant(row.tenant),
+  }))
 })
 
 export function can(role: Role, ...allowed: Role[]) {
