@@ -1,6 +1,8 @@
 export const SERVICE_CATEGORIES = [
   'Todas',
   'Comunicaciones Móviles',
+  'Cultura de consecuencias',
+  'Flujos movistar',
   'Gestión Humana',
   'Recursos del servicio',
   'Servicios administrativos',
@@ -17,7 +19,7 @@ export type ServiceItem = {
   description: string
   category: Exclude<ServiceCategory, 'Todas'>
   variant: ServiceVariant
-  tint?: string
+  photo: string
   approver: 'manager' | 'hr'
   requestTitle?: string
   options?: ServiceOption[]
@@ -31,7 +33,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Actualiza tu líder o el aprobador de tus trámites.',
     category: 'Gestión Humana',
     variant: 'light',
-    tint: '#D7EEF8',
+    photo: '/services/jefe.jpg',
     approver: 'hr',
     requestTitle: 'Actualización de jefe inmediato',
   },
@@ -42,7 +44,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Solicita un anticipo de prima o el retiro de cesantías.',
     category: 'Gestión Humana',
     variant: 'light',
-    tint: '#D9F3E3',
+    photo: '/services/prima-cesantias.jpg',
     approver: 'hr',
     options: [
       { id: 'anticipo-prima', title: 'Anticipo de prima' },
@@ -56,6 +58,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Asignación de sillas para colaboradores en modalidad autónoma (trabajo en casa).',
     category: 'Recursos del servicio',
     variant: 'navy',
+    photo: '/services/silla.jpg',
     approver: 'manager',
     requestTitle: 'Asignación de silla para trabajo en casa',
   },
@@ -66,6 +69,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Solicita el beneficio de equipo y línea celular.',
     category: 'Comunicaciones Móviles',
     variant: 'muted',
+    photo: '/services/beneficio-celular.jpg',
     approver: 'hr',
     requestTitle: 'Beneficio de celular',
   },
@@ -76,7 +80,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Cambio de EPS, fondo de pensión, cesantías y cuenta bancaria.',
     category: 'Gestión Humana',
     variant: 'light',
-    tint: '#FDE9C4',
+    photo: '/services/eps-pension.jpg',
     approver: 'hr',
     requestTitle: 'Cambio de EPS, pensión y cuenta bancaria',
   },
@@ -87,6 +91,7 @@ export const SERVICES: ServiceItem[] = [
     description: 'Cambia el plan de tu línea celular corporativa.',
     category: 'Comunicaciones Móviles',
     variant: 'navy',
+    photo: '/services/plan-celular.jpg',
     approver: 'hr',
     requestTitle: 'Cambio de plan de línea celular',
   },
@@ -102,4 +107,12 @@ export function resolveServiceTitle(id: string, option?: string) {
   if (option) return service.options?.find((o) => o.id === option)?.title
   if (service.options) return
   return service.requestTitle ?? service.title
+}
+
+export function serviceTitles(s: ServiceItem) {
+  return [s.requestTitle, s.title, ...(s.options?.map((o) => o.title) ?? [])].filter(Boolean) as string[]
+}
+
+export function matchesService(r: { title: string; payload?: { kind?: string } }, s: ServiceItem) {
+  return r.payload?.kind === s.id || serviceTitles(s).includes(r.title)
 }

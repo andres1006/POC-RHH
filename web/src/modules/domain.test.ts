@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { buildDemoData, DEMO_TENANTS } from '@/server/db/demo-data'
 import { accruedDays, businessDays, leaveBalance } from './leave/domain'
 import { decide, type HrRequest } from './requests/domain'
-import { SERVICES, resolveServiceTitle } from './requests/catalog'
+import { SERVICES, matchesService, resolveServiceTitle } from './requests/catalog'
 import { can } from '@/platform/rbac'
 
 describe('businessDays', () => {
@@ -65,6 +65,10 @@ describe('seed de Eficacia', () => {
     expect(resolveServiceTitle('prima-cesantias')).toBeUndefined()
     expect(resolveServiceTitle('prima-cesantias', 'anticipo-prima')).toBe('Anticipo de prima')
     expect(resolveServiceTitle('prima-cesantias', 'retiro-cesantias')).toBe('Retiro de cesantías')
+    const prima = SERVICES.find((s) => s.id === 'prima-cesantias')!
+    expect(matchesService({ title: 'Anticipo de prima' }, prima)).toBe(true)
+    expect(matchesService({ title: 'Actualización de jefe inmediato', payload: { kind: 'jefe' } }, prima)).toBe(false)
+    expect(matchesService({ title: 'x', payload: { kind: 'prima-cesantias' } }, prima)).toBe(true)
   })
   it('conserva las cuentas demo de Andina', () => {
     const emails = data.employees.filter((e) => e.tenantId === 't-andina').map((e) => e.email)
