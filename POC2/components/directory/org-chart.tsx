@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { ChevronDown, Crosshair, Minus, Plus, Search } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { EmployeeAvatar } from "@/components/shared/employee-avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
@@ -167,10 +167,15 @@ function TreeNode({ node, byManager, collapsed, toggle, highlight, slug, current
           node.id === currentId && "border-primary/50",
         )}
       >
-        <Avatar className="size-12">
-          <AvatarImage src={node.avatar_url ?? undefined} alt="" />
-          <AvatarFallback>{node.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}</AvatarFallback>
-        </Avatar>
+        <EmployeeAvatar
+          person={{
+            first_name: node.name.split(" ")[0] ?? node.name,
+            last_name: node.name.split(" ").slice(1).join(" "),
+            avatar_url: node.avatar_url,
+            position: node.position,
+          }}
+          className="size-12"
+        />
         <Link href={`/t/${slug}/directorio/${node.id}`} className="text-sm font-medium leading-tight hover:underline">
           {node.name}
         </Link>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Bell, Eye, EyeOff, LogOut, Menu, Moon, Search, Sun, UserCircle } from "lucide-react"
 import type { Notification, Role, Tenant } from "@/lib/types"
-import { fullName, initials, ROLE_LABEL } from "@/lib/format"
+import { fullName, ROLE_LABEL } from "@/lib/format"
 import { signOut } from "@/lib/actions"
 import { useSensitive } from "./sensitive-context"
 import { NotificationsDrawer } from "./notifications-drawer"
@@ -13,7 +13,7 @@ import { DemoSwitcher } from "./demo-switcher"
 import { visibleGroups } from "./nav"
 import type { ShellEmployee } from "./app-shell"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { EmployeeAvatar } from "@/components/shared/employee-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
@@ -102,10 +102,7 @@ export function Topbar({ tenant, role, employee, notifications, tenants, people,
 
       <DropdownMenu>
         <DropdownMenuTrigger render={<button type="button" className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Menú de usuario" />}>
-          <Avatar className="size-9">
-            <AvatarImage src={employee.avatar_url ?? undefined} alt="" />
-            <AvatarFallback>{initials(employee)}</AvatarFallback>
-          </Avatar>
+          <EmployeeAvatar person={employee} className="size-9" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-60">
           <DropdownMenuGroup>

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { avatarTone } from "@/lib/avatar-tone"
 import { fullName, initials } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
@@ -10,11 +10,16 @@ interface Person {
 }
 
 export function EmployeeAvatar({ person, className }: { person: Person | null | undefined; className?: string }) {
+  const name = person ? `${person.first_name} ${person.last_name}` : "?"
+  const tone = avatarTone(name)
   return (
-    <Avatar className={cn("size-9", className)}>
-      <AvatarImage src={person?.avatar_url ?? undefined} alt="" />
-      <AvatarFallback className="text-xs">{initials(person)}</AvatarFallback>
-    </Avatar>
+    <span
+      aria-hidden
+      className={cn("inline-flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold tracking-tight", className)}
+      style={{ backgroundColor: tone.bg, color: tone.fg }}
+    >
+      {initials(person)}
+    </span>
   )
 }
 

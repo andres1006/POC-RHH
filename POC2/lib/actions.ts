@@ -106,7 +106,8 @@ export async function createRequest(
   if (error || !req) return fail("No se pudo crear la solicitud.")
 
   await supabase.from("request_steps").insert({ tenant_id: ctx.tenant.id, request_id: req.id, step: 1, approver_id: approverId, status: "pending" })
-  await notify(ctx.tenant.id, approverId, "approval", `${ctx.employee.first_name} ${ctx.employee.last_name}: ${input.title}`, `/t/${slug}/solicitudes`)
+  const requestLink = typeof input.payload.kind === "string" ? `/t/${slug}/solicitudes/${input.payload.kind}` : `/t/${slug}/solicitudes`
+  await notify(ctx.tenant.id, approverId, "approval", `${ctx.employee.first_name} ${ctx.employee.last_name}: ${input.title}`, requestLink)
 
   revalidatePath(`/t/${slug}`, "layout")
   return { ok: true, message: "Solicitud enviada. Te avisaremos cuando sea revisada." }
@@ -158,12 +159,13 @@ export async function decideRequest(slug: string, requestId: string, decision: "
     await notify(ctx.tenant.id, req.requester_id, "signature", "Firma tu solicitud de vacaciones aprobada", `/t/${slug}/documentos`)
   }
 
+  const kind = (req.payload as { kind?: string } | null)?.kind
   await notify(
     ctx.tenant.id,
     req.requester_id,
     "notice",
     `Tu solicitud "${req.title}" fue ${decision === "approved" ? "aprobada" : "rechazada"}`,
-    `/t/${slug}/solicitudes`,
+    kind ? `/t/${slug}/solicitudes/${kind}` : `/t/${slug}/solicitudes`,
   )
 
   revalidatePath(`/t/${slug}`, "layout")
