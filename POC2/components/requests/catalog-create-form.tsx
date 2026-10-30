@@ -70,7 +70,7 @@ export function CatalogCreateForm({ slug, service }: { slug: string; service: Se
           placeholder="Cuéntanos el detalle de tu solicitud…"
         />
       </div>
-      <Button onClick={submit} disabled={pending}>
+      <Button onClick={submit} disabled={pending} className="w-full sm:w-auto">
         {pending ? "Enviando…" : "Enviar solicitud"}
       </Button>
     </div>

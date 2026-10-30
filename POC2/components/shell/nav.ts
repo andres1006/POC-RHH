@@ -64,7 +64,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: "Talento",
-    items: [{ label: "Desempeño", href: "/desempeno", icon: Target, module: "performance" }],
+    items: [{ label: "OKRs y desempeño", href: "/desempeno", icon: Target, module: "performance" }],
   },
   {
     label: "Cultura",

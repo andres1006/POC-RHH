@@ -59,8 +59,8 @@ export function RequestsTable({ requests, slug, currentEmployeeId, canDecide, sh
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-        <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por ID, título o solicitante" aria-label="Buscar solicitudes" className="lg:max-w-xs" />
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:flex lg:flex-row lg:items-center">
+        <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por ID, título o solicitante" aria-label="Buscar solicitudes" className="sm:col-span-2 lg:max-w-xs" />
         <Select value={status} onValueChange={(v) => setStatus(v as string)} items={STATUS_ITEMS}>
           <SelectTrigger className="lg:w-44" aria-label="Estado">
             <SelectValue />
@@ -111,7 +111,28 @@ export function RequestsTable({ requests, slug, currentEmployeeId, canDecide, sh
       {list.length === 0 ? (
         <EmptyState icon={Inbox} title="Sin solicitudes" description="No hay solicitudes que coincidan con los filtros." />
       ) : (
-        <div className="overflow-hidden rounded-xl border bg-card">
+        <>
+        <ul className="flex flex-col gap-2 md:hidden">
+          {list.map((r) => (
+            <li key={r.id}>
+              <button
+                type="button"
+                onClick={() => setSelected(r)}
+                className="flex w-full flex-col gap-2 rounded-xl border bg-card p-3 text-left"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <p className="min-w-0 text-sm font-semibold text-pretty">{r.title}</p>
+                  <StatusBadge status={r.status} />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {TYPE_LABEL[r.type_key] ?? r.type_key} · {formatDate(r.created_at)}
+                </p>
+                {showRequester && <PersonCell person={r.requester} subtitle={r.requester?.department?.name} />}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="hidden overflow-hidden rounded-xl border bg-card md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -160,6 +181,7 @@ export function RequestsTable({ requests, slug, currentEmployeeId, canDecide, sh
             </TableBody>
           </Table>
         </div>
+        </>
       )}
 
       <RequestDetailSheet request={selected} onOpenChange={(o) => !o && setSelected(null)} slug={slug} currentEmployeeId={currentEmployeeId} canDecide={canDecide} />
